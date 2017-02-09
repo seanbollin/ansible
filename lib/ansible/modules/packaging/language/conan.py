@@ -53,13 +53,55 @@ EXAMPLES = '''
 from ansible.module_utils.basic import *
 
 
+class Conan(object):
+    # seanbo@seanbo-All-Series:~/ansible$ hacking/test-module -m lib/ansible/modules/packaging/language/conan.py
+
+    # build
+    # copy
+    # exports
+    # imports
+    # install
+    # new
+    # package
+    # profile
+    # remote
+    # remove
+    # source
+    # test
+    # test_package
+    # upload
+    # user
+
+    def __init__(self, module, **kwargs):
+        self.module = module
+
+        if kwargs['executable']:
+            self.executable = kwargs['executable'].split(' ')
+        else:
+            self.executable = [module.get_bin_path('conan', True)]
+
+    def install(self):
+        pass
+
+
 def main():
-    module = AnsibleModule(
-        argument_spec=dict()
+    arg_spec = dict(
+        executable=dict(default=None, type='path'),
+        project=dict(default='.', type='path'),
+        build=dict(default='build', type='path')
     )
 
+    module = AnsibleModule(
+        argument_spec=arg_spec
+    )
+
+    executable = module.params['executable']
+
+    conan = Conan(module, executable=executable)
+
+    # TODO:
     # module.fail_json(msg="Something fatal happened")
-    module.exit_json(changed=True, something_else=12345)
+    module.exit_json(changed=False)
 
 if __name__ == '__main__':
     main()
